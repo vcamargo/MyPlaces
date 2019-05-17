@@ -1,0 +1,31 @@
+language: android
+jdk: openjdk8
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - android-28
+    - build-tools-28.0.3
+    - extra-android-support
+  licenses:
+    - 'android-sdk-license-.+'
+    - 'android-sdk-preview-.+'
+    - 'google-gdk-license-.+'
+
+addons:
+  sonarcloud:
+    organization: "vcamargo-github"
+    token:
+      secure: $SONAR_TOKEN
+
+stages:
+  - test
+
+jobs:
+  include:
+    - stage: test
+      name: "Build, Unit Test, Sonarcloud"
+      script:
+        - ./gradlew clean assembleDebug lint testDebugUnitTest jacocoTestReportKt
+        - sonar-scanner
