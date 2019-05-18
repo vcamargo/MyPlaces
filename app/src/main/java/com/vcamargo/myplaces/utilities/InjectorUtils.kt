@@ -8,6 +8,8 @@ object InjectorUtils {
     fun provideVenueDetailViewModelFactory(
         context: Context
         ) : ViewModelFactory {
-        return ViewModelFactory.Builder().asProdApi().build()
+        return ViewModelFactory.Builder()
+            .setContext(context)
+            .build()
     }
 }

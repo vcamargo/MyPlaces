@@ -1,9 +1,11 @@
 package com.vcamargo.myplaces.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import android.os.Handler
 import android.util.Log
+import com.vcamargo.myplaces.BuildConfig
 import com.vcamargo.myplaces.converter.VenuesConverterFactory
 import com.vcamargo.myplaces.repository.IRepository
 import com.vcamargo.myplaces.repository.MockRepository
@@ -26,12 +28,16 @@ class ViewModelFactory (val repository: IRepository) : ViewModelProvider.Factory
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 
-    class Builder() {
-        private var repository: IRepository? = null
+    class Builder {
+        private lateinit var repository: IRepository
         private var retrofit: Retrofit? = null
-        private var mockRepository: IRepository = MockRepository(Handler())
+        private var mContext : Context? = null
 
-        fun asProdApi() = apply {
+        fun setContext(mContext : Context) = apply {
+            this.mContext = mContext
+        }
+
+        private fun asProdApi() = apply {
             try {
                 retrofit = Retrofit.Builder()
                     .baseUrl(Webservice.BASE_URL)
@@ -39,6 +45,8 @@ class ViewModelFactory (val repository: IRepository) : ViewModelProvider.Factory
                     .build()
             } catch (ex : IllegalArgumentException) {
                 Log.e(LOG_TAG, ex.localizedMessage)
+                //failsafe for lateinit var is going to be the mock repository
+                asMock()
             }
 
             retrofit?.let {
@@ -48,12 +56,18 @@ class ViewModelFactory (val repository: IRepository) : ViewModelProvider.Factory
             }
         }
 
-        fun build() : ViewModelFactory {
-            repository?.let {
-                return ViewModelFactory(it)
-            }?: kotlin.run {
-                return ViewModelFactory(mockRepository)
+        private fun asMock() = apply {
+            mContext?.let {
+                repository = MockRepository(Handler(), it)
             }
+        }
+
+        fun build() : ViewModelFactory {
+            when (BuildConfig.BUILD_TYPE) {
+                "debug_mock" -> asMock()
+                else -> asProdApi()
+            }
+            return ViewModelFactory(repository)
         }
     }
 }

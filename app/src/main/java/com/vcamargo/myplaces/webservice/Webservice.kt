@@ -7,9 +7,30 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+/**
+ *
+ * Interface with the definitions of the HTTP calls to the Foursquare API
+ *
+ * **/
 interface Webservice {
+
     companion object {
+        //Webservice base url
         const val BASE_URL = "https://api.foursquare.com/v2/"
+        // foursquare api Userless Auth
+        const val FOURSQUARE_API_CLIENT_ID = ""
+        // foursquare api Userless Auth
+        const val FOURSQUARE_API_CLIENT_SECRET = ""
+        // foursquare api Versioning
+        const val FOURSQUARE_API_DATE = "20180518"
+        // venues search param category id
+        const val SEARCH_PARAM_CATEGORY_ID = "4d4b7105d754a06374d81259"
+        // venues search param raduis
+        const val SEARCH_PARAM_RADIUS = "500"
+        // foursquare api Userless Auth client_id
+        const val FOURSQUARE_API_AUTH_CLIENT_ID = "client_id"
+        // foursquare api Userless Auth client_secret
+        const val FOURSQUARE_API_AUTH_CLIENT_SECRET = "client_secret"
     }
 
     /**
@@ -18,17 +39,13 @@ interface Webservice {
      * https://developer.foursquare.com/docs/api/venues/search
      * https://developer.foursquare.com/docs/resources/categories
      *
-     * &intent=browse
-     * &radius=500
-     * &categoryId=4d4b7105d754a06374d81259
-     * &v=20180515
-     * &client_id=NHRNPTONQG4VDOWYDLWP34SLQM4DVXQIFHC0KY4UWMU3ACYR
-     * &client_secret=WI3ZDFGFKVTKSDJHQSF0HD4TLJRLITYTJAZZMYCLWFVKTFEQ
      * **/
-    @GET("venues/search?intent=browse&radius=500&categoryId=4d4b7105d754a06374d81259" +
-            "&client_id=NHRNPTONQG4VDOWYDLWP34SLQM4DVXQIFHC0KY4UWMU3ACYR" +
-            "&client_secret=WI3ZDFGFKVTKSDJHQSF0HD4TLJRLITYTJAZZMYCLWFVKTFEQ" +
-            "&v=20180515")
+    @GET("venues/search?intent=browse" +
+            "&radius=$SEARCH_PARAM_RADIUS" +
+            "&categoryId=$SEARCH_PARAM_CATEGORY_ID" +
+            "&$FOURSQUARE_API_AUTH_CLIENT_ID=$FOURSQUARE_API_CLIENT_ID" +
+            "&$FOURSQUARE_API_AUTH_CLIENT_SECRET=$FOURSQUARE_API_CLIENT_SECRET" +
+            "&v=$FOURSQUARE_API_DATE")
     fun getVenuesList(@Query("ll") latlang: String) : Call<List<VenueBasicDetails>>
 
     /**
@@ -38,8 +55,8 @@ interface Webservice {
      *
      * **/
     @GET("venues/{id}" +
-            "?client_id=NHRNPTONQG4VDOWYDLWP34SLQM4DVXQIFHC0KY4UWMU3ACYR" +
-            "&client_secret=WI3ZDFGFKVTKSDJHQSF0HD4TLJRLITYTJAZZMYCLWFVKTFEQ" +
-            "&v=20180515")
+            "&$FOURSQUARE_API_AUTH_CLIENT_ID=$FOURSQUARE_API_CLIENT_ID" +
+            "&$FOURSQUARE_API_AUTH_CLIENT_SECRET=$FOURSQUARE_API_CLIENT_SECRET" +
+            "&v=$FOURSQUARE_API_DATE")
     fun getVenueDetails(@Path("id") venueId: String) : Call<VenueDetails>
 }

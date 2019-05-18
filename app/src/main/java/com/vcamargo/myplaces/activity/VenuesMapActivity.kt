@@ -41,7 +41,7 @@ class VenuesMapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnC
 
     private lateinit var map: GoogleMap
     private var mFusedLocationProviderClient : FusedLocationProviderClient? = null
-    private val mDefaultLocation : LatLng = LatLng(-23.6815315, -46.8754902)
+    private val mDefaultLocation : LatLng = LatLng(37.5348073, 126.9925633)
     private var mLastKnownLocation: Location? = null
     private var mLocationPermissionGranted = false
 

@@ -7,6 +7,6 @@ data class VenueDetails(
     val hours : String,
     val categories : String,
     val price : String,
-    val rating : String,
+    val rating : Int,
     val photoUrl : String
 )

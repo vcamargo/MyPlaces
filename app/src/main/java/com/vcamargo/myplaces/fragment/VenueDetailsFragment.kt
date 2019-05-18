@@ -1,11 +1,11 @@
 package com.vcamargo.myplaces.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,6 +17,7 @@ import com.vcamargo.myplaces.repository.Resource
 import com.vcamargo.myplaces.utilities.InjectorUtils
 import com.vcamargo.myplaces.viewmodel.VenueDetailsViewModel
 import kotlinx.android.synthetic.main.fragment_venue_details.*
+import kotlinx.android.synthetic.main.progress_bar.*
 
 class VenueDetailsFragment : Fragment() {
     companion object {
@@ -27,9 +28,15 @@ class VenueDetailsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_venue_details, container, false)
-        toolbar = view.findViewById(R.id.toolbar) as? Toolbar
-        toolbar?.setNavigationIcon(R.drawable.icon_back_arrow)
-        toolbar?.setNavigationOnClickListener { activity?.onBackPressed() }
+
+        // Toolbar customization
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        val appCompatActivity = activity as? AppCompatActivity
+        appCompatActivity?.setSupportActionBar(toolbar)
+        appCompatActivity?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        appCompatActivity?.supportActionBar?.setDisplayShowHomeEnabled(true)
+        appCompatActivity?.supportActionBar?.setDisplayShowTitleEnabled(false)
+
         return view
     }
 
@@ -44,20 +51,41 @@ class VenueDetailsFragment : Fragment() {
                 .get(VenueDetailsViewModel::class.java)
             viewModel?.getVenueDetails(venueId)
             viewModel?.venueDetailsData?.observe(this, Observer {data ->
+                dismissLoading()
                 when(data.status) {
                     Resource.Status.SUCCESS -> {
                         val details = data.data
                         details?.let {venue->
-                            Log.d(LOG_TAG, venue.photoUrl)
                             Glide.with(requireContext()).load(venue.photoUrl).into(venue_image)
                             toolbar?.title = venue.name
+
+                            rating_progressbar.progress = (venue.rating * 10)
+                            venue_rating.text = venue.rating.toString()
+
+                            txt_venue_price.text = venue.price
+                            txt_venue_address.text = venue.formattedAddress
+                            txt_venue_categories.text = venue.categories
+                            txt_venue_hours.text = venue.hours
+                            txt_venue_phone.text = venue.formattedPhone
                         }
                     }
                     Resource.Status.ERROR -> {
                         Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
                     }
+
+                    Resource.Status.LOADING -> {
+                        showLoading()
+                    }
                 }
             })
         }
+    }
+
+    private fun showLoading() {
+        progress_bar.visibility = View.VISIBLE
+    }
+
+    private fun dismissLoading() {
+        progress_bar.visibility = View.GONE
     }
 }
