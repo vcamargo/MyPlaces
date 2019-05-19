@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/vcamargo/MyPlaces.svg?branch=master)](https://travis-ci.org/vcamargo/MyPlaces)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=vcamargo%3Astorytel-app&metric=coverage)](https://sonarcloud.io/dashboard?id=vcamargo%3Astorytel-app)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vcamargo%3Astorytel-app&metric=alert_status)](https://sonarcloud.io/dashboard?id=vcamargo%3Astorytel-app)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=vcamargo_MyPlaces&metric=coverage)](https://sonarcloud.io/dashboard?id=vcamargo_MyPlaces)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vcamargo_MyPlaces&metric=alert_status)](https://sonarcloud.io/dashboard?id=vcamargo_MyPlaces)
 
 # My Places App
 
