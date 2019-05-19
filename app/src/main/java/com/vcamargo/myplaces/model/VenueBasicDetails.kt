@@ -6,7 +6,7 @@ data class VenueBasicDetails(
     val id: String,
     val name : String,
     val address : String,
-    val latLng : LatLng,
+    val latLng : LatLng?,
     val distance : String,
     val categoryName : String,
     val categoryImage : String

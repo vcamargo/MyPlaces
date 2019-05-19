@@ -16,7 +16,7 @@ class VenueDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_venue_details)
 
         val bundle = intent.extras
-        val venueId = bundle.getString(KEY_VENUE_ID)
+        val venueId = with(bundle) { getString(KEY_VENUE_ID) }
 
         val newFragment = VenueDetailsFragment()
         val args = Bundle()

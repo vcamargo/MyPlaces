@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/map_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_this_area"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/btn_search_area"
+            android:visibility="gone" />
+
+    <androidx.cardview.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            card_view:cardCornerRadius="12dp"
+            android:layout_margin="12dp"
+            android:visibility="invisible">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <ImageView android:layout_width="0dp"
+                       android:layout_height="match_parent"
+                       android:layout_weight="0.5"
+                       android:padding="4dp"
+                       android:id="@+id/img_venue_type"
+                       android:contentDescription="@string/venue_category_image"/>
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textSize="20sp"
+                          app:fontFamily="sans-serif-condensed"
+                          android:id="@+id/venue_name"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textSize="15sp"
+                          app:fontFamily="sans-serif"
+                          android:id="@+id/venue_type"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textSize="15sp"
+                          app:fontFamily="sans-serif"
+                          android:id="@+id/venue_location"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <include layout="@layout/progress_bar"/>
+</RelativeLayout>

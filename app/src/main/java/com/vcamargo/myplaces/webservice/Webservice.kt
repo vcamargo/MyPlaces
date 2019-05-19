@@ -54,8 +54,7 @@ interface Webservice {
      * https://developer.foursquare.com/docs/api/venues/details
      *
      * **/
-    @GET("venues/{id}" +
-            "&$FOURSQUARE_API_AUTH_CLIENT_ID=$FOURSQUARE_API_CLIENT_ID" +
+    @GET("venues/{id}?$FOURSQUARE_API_AUTH_CLIENT_ID=$FOURSQUARE_API_CLIENT_ID" +
             "&$FOURSQUARE_API_AUTH_CLIENT_SECRET=$FOURSQUARE_API_CLIENT_SECRET" +
             "&v=$FOURSQUARE_API_DATE")
     fun getVenueDetails(@Path("id") venueId: String) : Call<VenueDetails>

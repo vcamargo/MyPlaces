@@ -10,8 +10,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class VenuesRepository(val webservice: Webservice) : IRepository {
-    private var venuesLiveData : MutableLiveData<Resource<List<VenueBasicDetails>>>
-    private var venueDetailsLiveData : MutableLiveData<Resource<VenueDetails>>
+    var venuesLiveData : MutableLiveData<Resource<List<VenueBasicDetails>>>
+    var venueDetailsLiveData : MutableLiveData<Resource<VenueDetails>>
 
     companion object {
         const val ERROR_EMPTY_RESPONSE = "Empty Response"
