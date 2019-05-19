@@ -62,12 +62,12 @@ class VenueMapFragment :
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        val buttonSearch = view.findViewById<Button>(R.id.btn_search_area)
+        val buttonSearch : Button = view.findViewById(R.id.btn_search_area)
         buttonSearch.let {
             it.setOnClickListener {
                 map.clear()
 
-                searchForVenues(map.cameraPosition.target)
+                venuesListViewModel?.lastKnownLocation?.value = map.cameraPosition.target
                 btn_search_area.visibility = View.INVISIBLE
             }
         }
@@ -81,19 +81,19 @@ class VenueMapFragment :
         // Construct a FusedLocationProviderClient.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-    }
-
-    private fun searchForVenues(latLng: LatLng) {
-        val latlng = StringBuilder()
-        latlng.append(latLng.latitude)
-        latlng.append(",")
-        latlng.append(latLng.longitude)
-
         val factory = InjectorUtils.provideVenueDetailViewModelFactory(requireActivity())
         venuesListViewModel = ViewModelProviders.of(requireActivity(), factory)
             .get(VenuesListViewModel::class.java)
 
-        venuesListViewModel?.venuesLiveData?.observe(requireActivity(), Observer{ data ->
+        venuesListViewModel?.lastKnownLocation?.observe(requireActivity(), Observer {
+            searchForVenues()
+        })
+    }
+
+    private fun searchForVenues() {
+        venuesListViewModel?.venuesSearch()
+
+        venuesListViewModel?.venuesLiveData?.observe(requireActivity(), Observer { data ->
             dismissLoading()
             when (data?.status) {
                 Resource.Status.SUCCESS -> {
@@ -119,7 +119,7 @@ class VenueMapFragment :
                 Resource.Status.ERROR -> {
                     ErrorDialog(
                         {
-//                            venuesListViewModel?.venuesSearch()
+                            //                            venuesListViewModel?.venuesSearch()
                         },{
                             requireActivity().finish()
                         }).showErrorDialog("Failed to retrieve search results",
@@ -186,7 +186,7 @@ class VenueMapFragment :
                             val latlng = LatLng(
                                 it.latitude,
                                 it.longitude)
-                            searchForVenues(latlng)
+                            venuesListViewModel?.lastKnownLocation?.value = latlng
                             map.moveCamera(
                                 CameraUpdateFactory.newLatLngZoom(
                                     latlng, DEFAULT_ZOOM
@@ -228,7 +228,7 @@ class VenueMapFragment :
                 map.isMyLocationEnabled = true
 
                 // Get the current location of the device and set the position of the map.
-                getDeviceLocation()
+                    getDeviceLocation()
             } else {
                 with(map.uiSettings) {
                     isMyLocationButtonEnabled = true
