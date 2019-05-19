@@ -20,7 +20,7 @@ class MockRepository(
 ) : IRepository {
 
     companion object {
-        const val DELAY = 2000
+        const val DELAY = 2000L
         const val VENUES_SEARCH_JSON_FILENAME = "search.json"
         const val VENUE_DETAILS_JSON_FILENAME = "venues.json"
     }
@@ -46,7 +46,7 @@ class MockRepository(
                     venueDetailsLiveData.value = Resource.success(response)
                 }
             }
-        }, 2000)
+        }, DELAY)
 
         return venueDetailsLiveData
     }
@@ -60,7 +60,7 @@ class MockRepository(
                 val response = VenuesSearchConverter().convert(responseBody)
                 venuesLiveData.value = Resource.success(response)
             }
-        }, 2000)
+        }, DELAY)
 
         return venuesLiveData
     }

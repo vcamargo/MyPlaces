@@ -80,6 +80,8 @@ dependencies {
     // Testing
     testImplementation "junit:junit:$junit_version"
     testImplementation "com.squareup.okhttp3:mockwebserver:$mock_web_server"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "android.arch.core:core-testing:$viewmodel_version"
     androidTestImplementation "androidx.test:runner:$test_runner_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }
