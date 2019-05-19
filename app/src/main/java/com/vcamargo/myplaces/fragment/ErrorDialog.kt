@@ -19,12 +19,12 @@ class ErrorDialog(val onRetry: () -> Unit, val onCancel : () -> Unit) {
                     setPositiveButton(context.getString(R.string.error_dialog_btn_retry)
                     ) { dialog, id ->
                         onRetry()
-                        dialog.dismiss()
+                        dialog.cancel()
                     }
                     setNegativeButton(context.getString(R.string.error_dialog_btn_cancel)
                     ) { dialog, id ->
                         onCancel()
-                        dialog.dismiss()
+                        dialog.cancel()
                     }
                 }
             return it.create()
@@ -35,15 +35,7 @@ class ErrorDialog(val onRetry: () -> Unit, val onCancel : () -> Unit) {
     }
 
     fun showErrorDialog(errorMsg: String, context: Context) {
-        errorDialog?.let {
-            if (!it.isShowing) {
-                errorDialog = createErrorDialog(errorMsg, context)
-            } else {
-                return
-            }
-        } ?: run {
-            errorDialog = createErrorDialog(errorMsg, context)
-        }
+        errorDialog = createErrorDialog(errorMsg, context)
         errorDialog?.show()
     }
 }

@@ -33,7 +33,6 @@ import com.vcamargo.myplaces.utilities.InjectorUtils
 import com.vcamargo.myplaces.viewmodel.VenuesListViewModel
 import kotlinx.android.synthetic.main.fragment_venues_map.*
 import kotlinx.android.synthetic.main.progress_bar.*
-import java.lang.StringBuilder
 
 class VenueMapFragment :
     Fragment(),
@@ -62,7 +61,7 @@ class VenueMapFragment :
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        val buttonSearch : Button = view.findViewById(R.id.btn_search_area)
+        val buttonSearch : Button = view.findViewById<Button>(R.id.btn_search_area)
         buttonSearch.let {
             it.setOnClickListener {
                 map.clear()
@@ -97,8 +96,8 @@ class VenueMapFragment :
             dismissLoading()
             when (data?.status) {
                 Resource.Status.SUCCESS -> {
-                    val data = data?.data
-                    data?.let { d ->
+                    val venueData = data?.data
+                    venueData?.let { d ->
                         d.forEachIndexed { index, element ->
                             element.latLng?.let {
                                 val marker = map.addMarker(
@@ -119,10 +118,11 @@ class VenueMapFragment :
                 Resource.Status.ERROR -> {
                     ErrorDialog(
                         {
-                            //                            venuesListViewModel?.venuesSearch()
+                            venuesListViewModel?.venuesSearch()
                         },{
-                            requireActivity().finish()
-                        }).showErrorDialog("Failed to retrieve search results",
+                            Log.d(LOG_TAG, "Failed to retrieve search results")
+                        }
+                    ).showErrorDialog("Failed to retrieve search results",
                         requireActivity())
                 }
 
