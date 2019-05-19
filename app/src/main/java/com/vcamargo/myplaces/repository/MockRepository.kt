@@ -43,7 +43,7 @@ class MockRepository(
                 val responseBody = ResponseBody.create(mediaType, inputStream.readBytes())
                 val response = VenueDetailsConverter().convert(responseBody)
                 response?.let {
-                    venueDetailsLiveData?.value = Resource.success(response)
+                    venueDetailsLiveData.value = Resource.success(response)
                 }
             }
         }, 2000)
@@ -58,9 +58,7 @@ class MockRepository(
             mContext.assets.open(VENUES_SEARCH_JSON_FILENAME).use { inputStream ->
                 val responseBody = ResponseBody.create(mediaType, inputStream.readBytes())
                 val response = VenuesSearchConverter().convert(responseBody)
-                response?.let {
-                    venuesLiveData?.value = Resource.success(response)
-                }
+                venuesLiveData.value = Resource.success(response)
             }
         }, 2000)
 

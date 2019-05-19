@@ -4,9 +4,11 @@ import android.util.Log
 import com.vcamargo.myplaces.model.VenueBasicDetails
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
 import okhttp3.ResponseBody
 import org.json.JSONException
 import retrofit2.Converter
+import java.io.IOException
 import java.lang.StringBuilder
 
 class VenuesSearchConverter : Converter<ResponseBody, List<VenueBasicDetails>> {
@@ -26,6 +28,7 @@ class VenuesSearchConverter : Converter<ResponseBody, List<VenueBasicDetails>> {
         const val JSON_KEY_VENUE_CATEGORY_ICON_PREFIX = "prefix"
         const val JSON_KEY_VENUE_CATEGORY_ICON_SIZE = "bg_44"
         const val JSON_KEY_VENUE_CATEGORY_ICON_SUFFIX = "suffix"
+        const val NO_VALUE = "-"
         const val LOG_TAG = "VenuesSearchConverter"
     }
 
@@ -33,48 +36,73 @@ class VenuesSearchConverter : Converter<ResponseBody, List<VenueBasicDetails>> {
         var venuesList = mutableListOf<VenueBasicDetails>()
 
         try {
+            var id : String? = null
+            var name : String? = null
+            var address : String? = null
+            var distance : String? = null
+            var latlng : LatLng? = null
+            var categoryName : String? = null
+            var categoryIconUrl : String? = null
+
             val res = responseBody.string()
 
             val jsonParser = JsonParser()
             val venues = jsonParser.parse(res).asJsonObject
                 .getAsJsonObject(JSON_KEY_RESPONSE)
                 .getAsJsonArray(JSON_KEY_VENUES)
-            venues.forEach {
-                val venue = it.asJsonObject
-                val id = venue.get(JSON_KEY_VENUE_ID).asString
-                val name = venue.get(JSON_KEY_VENUE_NAME).asString
+            venues?.let {v->
+                v.forEach {item->
+                    val venue = item.asJsonObject
+                    venue.takeIf { it != null }.apply {
+                        id = this?.get(JSON_KEY_VENUE_ID)?.asString
+                        name = this?.get(JSON_KEY_VENUE_NAME)?.asString
 
-                val location = venue.getAsJsonObject(JSON_KEY_VENUE_LOCATION).asJsonObject
-                val address = location.get(JSON_KEY_VENUE_LOCATION_ADDRESS).asString
-                val lat = location.get(JSON_KEY_VENUE_LOCATION_LAT).asDouble
-                val lng = location.get(JSON_KEY_VENUE_LOCATION_LNG).asDouble
-                val latlng = LatLng(lat, lng)
-                val distance = location.get(JSON_KEY_VENUE_LOCATION_DISTANCE).asInt.toString()
+                        val location = this?.getAsJsonObject(JSON_KEY_VENUE_LOCATION)?.asJsonObject
+                        location.takeIf { it != null }.apply {
+                            address = this?.get(JSON_KEY_VENUE_LOCATION_ADDRESS)?.asString
+                            val lat = this?.get(JSON_KEY_VENUE_LOCATION_LAT)?.asDouble
+                            val lng = this?.get(JSON_KEY_VENUE_LOCATION_LNG)?.asDouble
+                            distance = this?.get(JSON_KEY_VENUE_LOCATION_DISTANCE)?.asInt.toString()
 
-                val category = venue.getAsJsonArray(JSON_KEY_VENUE_CATEGORIES)[0].asJsonObject
-                val categoryName = category.get(JSON_KEY_VENUE_CATEGORY_NAME).asString
-                val icon = category.getAsJsonObject(JSON_KEY_VENUE_CATEGORY_ICON).asJsonObject
+                            lat?.let {
+                                lng?.let {
+                                    latlng = LatLng(lat, lng)
+                                }
+                            }
+                        }
 
-                val iconUrl = StringBuilder()
-                iconUrl.append(icon.get(JSON_KEY_VENUE_CATEGORY_ICON_PREFIX).asString)
-                iconUrl.append(JSON_KEY_VENUE_CATEGORY_ICON_SIZE)
-                iconUrl.append(icon.get(JSON_KEY_VENUE_CATEGORY_ICON_SUFFIX).asString)
-                val categoryIconUrl = iconUrl.toString()
+                        val category = this?.getAsJsonArray(JSON_KEY_VENUE_CATEGORIES)?.get(0)?.asJsonObject
+                        category.takeIf { it != null }.apply {
+                            categoryName = this?.get(JSON_KEY_VENUE_CATEGORY_NAME)?.asString
+                            val icon = this?.getAsJsonObject(JSON_KEY_VENUE_CATEGORY_ICON)?.asJsonObject
 
-                venuesList.add(
-                    VenueBasicDetails(
-                        id,
-                        name,
-                        address,
-                        latlng,
-                        distance,
-                        categoryName,
-                        categoryIconUrl
-                    )
-                )
+                            icon.takeIf { it!= null }.apply {
+                                val iconUrl = StringBuilder()
+                                iconUrl.append(this?.get(JSON_KEY_VENUE_CATEGORY_ICON_PREFIX)?.asString)
+                                iconUrl.append(JSON_KEY_VENUE_CATEGORY_ICON_SIZE)
+                                iconUrl.append(this?.get(JSON_KEY_VENUE_CATEGORY_ICON_SUFFIX)?.asString)
+                                categoryIconUrl = iconUrl.toString()
+                            }
+                        }
+
+                        venuesList.add(
+                            VenueBasicDetails(
+                                id ?: NO_VALUE,
+                                name ?: NO_VALUE,
+                                address ?: NO_VALUE,
+                                latlng,
+                                distance ?: NO_VALUE,
+                                categoryName ?: NO_VALUE,
+                                categoryIconUrl ?: NO_VALUE
+                            )
+                        )
+                    }
+                }
             }
 
-        } catch (e: JSONException) {
+        } catch (e : JsonSyntaxException) {
+            Log.e(LOG_TAG, e.localizedMessage)
+        } catch (e: IOException) {
             Log.e(LOG_TAG, e.localizedMessage)
         } finally {
             return venuesList

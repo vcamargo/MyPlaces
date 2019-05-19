@@ -2,6 +2,7 @@ package com.vcamargo.myplaces.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -70,7 +71,14 @@ class VenueDetailsFragment : Fragment() {
                         }
                     }
                     Resource.Status.ERROR -> {
-                        Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
+                            ErrorDialog(
+                                {
+                                viewModel?.getVenueDetails(venueId)
+                            },{
+                                    requireActivity().finish()
+                                }).
+                                showErrorDialog("Failed to retrieve venue details",
+                                requireContext())
                     }
 
                     Resource.Status.LOADING -> {

@@ -3,4 +3,7 @@
     <string name="search_this_area">Search This area</string>
     <string name="venue_category_image">Venue Category Image</string>
     <string name="venue_detail_image_content_description">Venue Image</string>
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_btn_retry">Retry</string>
+    <string name="error_dialog_btn_cancel">Cancel</string>
 </resources>
