@@ -30,10 +30,12 @@ After it's created you must update the Webservice interface locally.
 
 File: com.vcamargo.myplaces.webservice.Webservice
 
-        // foursquare api Userless Auth
-        const val FOURSQUARE_API_CLIENT_ID = ""
-        // foursquare api Userless Auth
-        const val FOURSQUARE_API_CLIENT_SECRET = ""
+```
+// foursquare api Userless Auth
+const val FOURSQUARE_API_CLIENT_ID = ""
+// foursquare api Userless Auth
+const val FOURSQUARE_API_CLIENT_SECRET = ""
+```
 
 ### Google Maps Api Key
 
@@ -41,7 +43,9 @@ Also the file google_maps_api.xml must be updated with your Google Maps API Key 
 
 File: res/values/google_maps_api.xml
 
+```
  <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve"></string>
+```
 
 There are two different debug build variantes (debug and debug_mock). Debug will set the repository to fetch data from the official Foursquare API, but debug_mock will use MockRepository with hardcoded responses instead.
 
