@@ -6,7 +6,7 @@ buildscript {
         android_gradle_version = '3.4.1'
         appcompat_version = '1.0.2'
         junit_version = '4.12'
-        test_runner_version = '1.1.1'
+        test_runner_version = '1.4.0'
         espresso_version = '3.1.1'
         jacoco = '0.7.9'
         jacoco_android = '0.1.4'
